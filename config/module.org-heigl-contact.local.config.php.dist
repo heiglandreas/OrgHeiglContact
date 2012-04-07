@@ -1,0 +1,32 @@
+<?php
+return array('di' => array(
+    'preferences' => array(
+        'Zend\Mail\Transport'  => 'Zend\Mail\Transport\File',
+//        'Zend\Mail\Transport'  => 'Zend\Mail\Transport\Sendmail',
+//        'Zend\Mail\Transport'  => 'Zend\Mail\Transport\Smtp',
+    ),
+    'instance' => array(
+        'OrgHeiglContact\Controller\ContactController' => array('parameters' => array(
+            'transport' => 'Zend\Mail\Transport\File',
+            'message'   => 'Zend\Mail\Message',
+        )),
+        'Zend\Mail\Transport\FileOptions' => array('parameters' => array(
+            'Zend\Mail\Transport\FileOptions::setPath:path' => sys_get_temp_dir(),
+        )),
+        'Zend\Mail\Transport\File' => array('parameters' => array(
+            'options' => 'Zend\Mail\Transport\FileOptions',
+        )),
+        'Zend\Mail\Transport\SmtpOptions' => array('parameters' => array(
+        	'foo' => 'bar',
+        )),
+        'Zend\Mail\Transport\Smtp' => array('parameters' => array(
+            'options' => 'Zend\Mail\Transport\SmtpOptions',
+        )),
+        'Zend\Mail\Message' => array('parameters' => array(
+            'Zend\Mail\Message::addTo:emailOrAddressList' => 'sender@example.com',
+            'Zend\Mail\Message::addTo:name' => 'Your Name',
+            'Zend\Mail\Message::setSender:emailOrAddressList' => 'sender@example.com',
+            'Zend\Mail\Message::setSender:name' => 'Your Name',
+        )),
+    )),
+);

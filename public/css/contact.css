@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+
+#country-label {display:none;}
+#country-element {display: none;}
+.contact {
+    margin: 10px;
+}
