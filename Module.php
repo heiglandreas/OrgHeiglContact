@@ -32,10 +32,9 @@
 
 namespace OrgHeiglContact;
 
-use Zend\Module\Manager,
+use Zend\ModuleManager\ModuleManager,
     Zend\EventManager\StaticEventManager,
-    Zend\Module\Consumer\AutoloaderProvider;
-
+	Zend\Mvc\ModuleRouteListener;
 /**
  * The Module-Provider
  *
@@ -48,41 +47,47 @@ use Zend\Module\Manager,
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/php.ug
  */
-class Module implements AutoloaderProvider
+class Module
 {
-    public function init(Manager $moduleManager)
-    {
-        $events = StaticEventManager::getInstance();
-        $events->attach('bootstrap', 'bootstrap', array($this, 'initializeView'), 100);
-    }
+//     public function init(ModuleManager $moduleManager)
+//     {
+//         $events = StaticEventManager::getInstance();
+//         $events->attach('bootstrap', 'bootstrap', array($this, 'initializeView'), 100);
+//     }
 
-    public function getAutoloaderConfig()
+//     public function initializeView($e)
+//     {
+//     	$app          = $e->getParam('application');
+//     	$basePath     = $app->getRequest()->getBasePath();
+//     	$locator      = $app->getLocator();
+//     	$renderer     = $locator->get('Zend\View\Renderer\PhpRenderer');
+//     	$renderer->plugin('url')->setRouter($app->getRouter());
+//     	$renderer->doctype()->setDoctype('HTML5');
+//     	$renderer->plugin('basePath')->setBasePath($basePath);
+    
+//     }
+    
+    public function onBootstrap($e)
     {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/autoload_classmap.php',
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
+    	$e->getApplication()->getServiceManager()->get('translator');
+    	$eventManager        = $e->getApplication()->getEventManager();
+    	$moduleRouteListener = new ModuleRouteListener();
+    	$moduleRouteListener->attach($eventManager);
     }
-
+    
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+    	return include __DIR__ . '/config/module.config.php';
     }
-
-    public function initializeView($e)
+    
+    public function getAutoloaderConfig()
     {
-        $app          = $e->getParam('application');
-        $basePath     = $app->getRequest()->getBasePath();
-        $locator      = $app->getLocator();
-        $renderer     = $locator->get('Zend\View\Renderer\PhpRenderer');
-        $renderer->plugin('url')->setRouter($app->getRouter());
-        $renderer->doctype()->setDoctype('HTML5');
-        $renderer->plugin('basePath')->setBasePath($basePath);
+    	return array(
+    			'Zend\Loader\StandardAutoloader' => array(
+    					'namespaces' => array(
+    							__NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+    					),
+    			),
+    	);
     }
 }

@@ -1,90 +1,66 @@
 <?php
+
+namespace OrgHeiglContact;
+
 return array(
-    'di' => array(
-        'definition' => array('class' => array(
-            'Zend\Mail\Message' => array(
-                'addTo' => array(
-                    'emailOrAddressList' => array(
-                        'type' => false,
-                        'required' => true,
-                    ),
-                    'name' => array(
-                        'type' => false,
-                        'required' => false,
+	'service_manager' => array(
+		'factories' => array(
+			'message'   => 'OrgHeiglContact\Service\MailMessageFactory',
+			'transport' => 'OrgHeiglContact\Service\MailTransportFactory',
+		),
+		'instances' => array(
+			'OrgHeiglContact\Form\ContactForm' => 'OrgHeiglContact\Form\ContactForm',
+		),
+	),
+	'controllers' => array(
+		'factories' => array(
+			'OrgHeiglContact\Controller\ContactController' => 'OrgHeiglContact\Service\ContactControllerFactory'
+		),
+	),
+	'view_manager' => array(
+			'display_not_found_reason' => true,
+			'display_exceptions'       => true,
+			'doctype'                  => 'HTML5',
+			'not_found_template'       => 'error/404',
+			'exception_template'       => 'error/index',
+			'template_map'             => array(),
+			'template_path_stack' => array(
+					__DIR__ . '/../view',
+			),
+	),	
+	'router' => array(
+        'routes' => array(
+            'contact' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/contact',
+                    'defaults' => array(
+                        'controller' => 'OrgHeiglContact\Controller\ContactController',
+                        'action'     => 'index',
                     ),
                 ),
-                'addFrom' => array(
-                    'emailOrAddressList' => array(
-                        'type' => false,
-                        'required' => true,
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'process' => array(
+                        'type' => 'Literal',
+                        'options' => array(
+                            'route' => '/process',
+                            'defaults' => array(
+                                'action'     => 'process',
+                            ),
+                        ),
                     ),
-                    'name' => array(
-                        'type' => false,
-                        'required' => false,
-                    ),
-                ),
-                'setSender' => array(
-                    'emailOrAddressList' => array(
-                        'type' => false,
-                        'required' => true,
-                    ),
-                    'name' => array(
-                        'type' => false,
-                        'required' => false,
+                    'thank-you' => array(
+                        'type' => 'Literal',
+                        'options' => array(
+                            'route' => '/thank-you',
+                            'defaults' => array(
+                                'action'     => 'thank-you',
+                            ),
+                        ),
                     ),
                 ),
             ),
-        )),
-        'instance' => array(
-            'OrgHeiglContact\Controller\ContactController' => array('parameters' => array(
-                'contactForm'      => 'OrgHeiglContact\Form\ContactForm',
-            )),
-            'Zend\View\Resolver\TemplateMapResolver' => array('parameters' => array(
-                'map'  => array(
-                    'contact/index'     => __DIR__ . '/../view/contact/index.phtml',
-                    'contact/thank-you' => __DIR__ . '/../view/contact/thank-you.phtml',
-                ),
-            )),
-            'Zend\View\Resolver\TemplatePathStack' => array('parameters' => array(
-                'paths'  => array(
-                    'contact' => __DIR__ . '/../view',
-                ),
-            )),
-            'Zend\Mvc\Router\RouteStack' => array('parameters' => array(
-                'routes' => array(
-                    'contact' => array(
-                        'type' => 'Literal',
-                        'options' => array(
-                            'route' => '/m/contact',
-                            'defaults' => array(
-                                'controller' => 'OrgHeiglContact\Controller\ContactController',
-                                'action'     => 'index',
-                            ),
-                        ),
-                        'may_terminate' => true,
-                        'child_routes' => array(
-                            'process' => array(
-                                'type' => 'Literal',
-                                'options' => array(
-                                    'route' => '/process',
-                                    'defaults' => array(
-                                        'action'     => 'process',
-                                    ),
-                                ),
-                            ),
-                            'thank-you' => array(
-                                'type' => 'Literal',
-                                'options' => array(
-                                    'route' => '/thank-you',
-                                    'defaults' => array(
-                                        'action'     => 'thank-you',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            )),
         ),
     )
 );

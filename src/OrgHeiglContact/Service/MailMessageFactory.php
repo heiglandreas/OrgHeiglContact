@@ -20,17 +20,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @category  ContactForm
- * @package   OrgHeiglContact
+ * @package   HeiglContact
  * @author    Andreas Heigl<andreas@heigl.org>
  * @copyright 2011-2012 Andreas Heigl
  * @license   http://www.opesource.org/licenses/mit-license.php MIT-License
  * @version   0.0
  * @since     06.03.2012
- * @link      http://github.com/heiglandreas/OrgHeiglContact
+ * @link      http://github.com/heiglandreas/php.ug
  */
-return array(
-    'OrgHeiglContact\Form\ContactForm'             => __DIR__ . '/src/OrgHeiglContact//Form/ContactForm.php',
-    'OrgHeiglContact\Controller\ContactController' => __DIR__ . '/src/OrgHeiglContact/Controller/ContactController.php',
+namespace OrgHeiglContact\Service;
 
-);
+use Traversable;
+use Zend\Mail\Message;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Stdlib\ArrayUtils;
+
+class MailMessageFactory implements FactoryInterface
+{
+	public function createService(ServiceLocatorInterface $services)
+	{
+		$config  = $services->get('config');
+		if ($config instanceof Traversable) {
+			$config = ArrayUtils::iteratorToArray($config);
+		}
+		$config  = $config['OrgHeiglContact']['message'];
+
+		$message = new Message();
+
+		if (isset($config['to'])) {
+			$message->addTo($config['to']);
+		}
+
+		if (isset($config['from'])) {
+			$message->addFrom($config['from']);
+		}
+
+		if (isset($config['sender']) && isset($config['sender']['address'])) {
+			$address = $config['sender']['address'];
+			$name    = isset($config['sender']['name']) ? $config['sender']['name'] : null;
+			$message->setSender($address, $name);
+		}
+
+		return $message;
+	}
+}

@@ -31,12 +31,12 @@
  */
 namespace OrgHeiglContact\Controller;
 
-use Zend\Mvc\Controller\ActionController,
-    OrgHeiglContact\Form\ContactForm,
-    Zend\Mail\Transport,
-    Zend\Mail\Message as Message,
-    Zend\View\Model\ViewModel
-;
+
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mail\Transport\TransportInterface;
+use OrgHeiglContact\Form\ContactForm;
+use Zend\Mail\Message as Message;
+use Zend\View\Model\ViewModel;
 
 /**
  * The Contact-Form Controller
@@ -50,7 +50,7 @@ use Zend\Mvc\Controller\ActionController,
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/OrgHeiglContact
  */
-class ContactController extends ActionController
+class ContactController extends AbstractActionController
 {
     /**
      * THe storage of the form-object
@@ -72,6 +72,13 @@ class ContactController extends ActionController
      * @var Transport $transport
      */
     protected $transport = null;
+    
+    public function __construct(ContactForm $form = null)
+    {
+    	if ( null !== $form ) {
+    		$this->setContactForm($form);
+    	}
+    }
 
     /**
      * Set the default message
@@ -93,7 +100,7 @@ class ContactController extends ActionController
      *
      * @return ContactController
      */
-    public function setTransport(Transport $transport)
+    public function setTransport(TransportInterface $transport)
     {
         $this->transport = $transport;
         return $this;
@@ -109,6 +116,7 @@ class ContactController extends ActionController
     public function setContactForm(ContactForm $contactForm)
     {
         $this->form = $contactForm;
+        $this->form->init();
         return $this;
     }
 
@@ -132,9 +140,10 @@ class ContactController extends ActionController
         if (!$this->request->isPost()) {
             return $this->redirect()->toRoute('contact');
         }
-        $post = $this->request->post()->toArray();
+        $post = $this->request->getPost();
         $form = $this->form;
-        if (!$form->isValid($post)) {
+        $form->setData($post);
+        if (!$form->isValid()) {
             $model = new ViewModel(array(
                         'error' => true,
                         'form'  => $form
@@ -144,7 +153,7 @@ class ContactController extends ActionController
         }
 
         // send email...
-        $this->sendEmail($form->getValues());
+        $this->sendEmail($form->getData());
 
         return $this->redirect()->toRoute('contact/thank-you');
     }
@@ -176,7 +185,7 @@ class ContactController extends ActionController
      */
     public function thankYouAction()
     {
-        $headers = $this->request->headers();
+        $headers = $this->request->getHeaders();
         if (!$headers->has('Referer')
             || !preg_match('#/contact$#',
         $headers->get('Referer')->getFieldValue())

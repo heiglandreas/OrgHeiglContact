@@ -31,10 +31,10 @@
  */
 namespace OrgHeiglContact\Form;
 
-use Zend\Form\Form,
-    Zend\Validator\Hostname as HostnameValidator,
-    OrgHeiglContact\Validator\IsEmpty as EmptyValidator
-;
+use Zend\Form\Form;
+use Zend\Form\Element;
+use Zend\Validator\Hostname as HostnameValidator;
+use OrgHeiglContact\Validator\IsEmpty as EmptyValidator;
 
 /**
  * The Contact-Form
@@ -59,57 +59,77 @@ class ContactForm extends Form
     {
         $this->setName('contact');
 
-        $this->addElement('text', 'from', array(
-                'label'     => 'From:',
-                'required'  => true,
-                'validators' => array(
-        array('EmailAddress', true, array(
-                        'allow'  => HostnameValidator::ALLOW_DNS,
-                        'domain' => true,
-        )),
+        $this->add(array(
+        		'name' => 'from',
+        		'type' => 'Zend\Form\Element\Text',
+        		'options' => array(
+                	'label'     => 'From:',
+                	'required'  => true,
+                	'validators' => array(
+        				array(
+        					'name' => 'EmailAddress',
+        					'options' => array(
+	                        	'allow'  => HostnameValidator::ALLOW_DNS,
+	                        	'domain' => true,
+        					),
+        				),
+        			),
+        		)
+        	));
+
+        $this->add(array(
+        		'name' => 'subject',
+        		'type' => 'Zend\Form\Element\Text',
+        		'options' => array(
+	                'label'      => 'Subject:',
+	                'required'   => true,
+	                'filters'    => array(
+	                    'StripTags',
+	        		),
+	                'validators' => array(
+				        array('StringLength', true, array(
+	                        'encoding' => 'UTF-8',
+	                        'min'      => 2,
+	                        'max'      => 140,
+				        )),
+	                )
         ),
         ));
 
-        $this->addElement('text', 'subject', array(
-                'label'      => 'Subject:',
-                'required'   => true,
-                'filters'    => array(
-                    'StripTags',
-        ),
-                'validators' => array(
-        array('StringLength', true, array(
-                        'encoding' => 'UTF-8',
-                        'min'      => 2,
-                        'max'      => 140,
-        )),
-        ),
+        $this->add(array(
+        		'name' => 'body',
+        		'type' => 'Zend\Form\Element\Textarea',
+        		'options' => array(
+	                'label'    => 'Your message:',
+	                'required' => true,
+	                'cols'     => 80,
+	                'rows'     => 10,
+        		)
         ));
 
-        $this->addElement('textarea', 'body', array(
-                'label'    => 'Your message:',
-                'required' => true,
-                'cols'     => 80,
-                'rows'     => 10,
+        $this->add(array(
+        		'name' => 'country',
+        		'type' => 'Zend\Form\Element\Text',
+        		'options' => array(
+	                'required'       => false,
+	                'value'          => '',
+	                'ignore'         => true,
+	                'class'          => 'zonkos',
+	                'label'          => 'SPAM-Protection: Please leave this field as it is!',
+	                'validators' => array(
+	                	new \Zend\Validator\Identical(''),
+	                ),
+        		),
         ));
 
-        $this->addElement('text', 'country', array(
-                'required'       => false,
-                'validators'     => array(array('Identical',true,array('token'=> ''))),
-                'value'          => '',
-                'ignore'         => true,
-                'class'          => 'zonkos',
-                'label'          => 'SPAM-Protection: Please leave this field as it is!'
-        ));
-
-        $this->addElement('hash', 'csrf', array(
-                'ignore'   => true,
-                'required' => true,
-        ));
-
-        $this->addElement('submit', 'Send', array(
-                'label'    => 'Send',
-                'required' => false,
-                'ignore'   => true,
+        $this->add(new Element\Csrf('csrf'));
+        
+        $this->add(array(
+        		'name' => 'Send',
+        		'type' => 'Zend\Form\Element\Submit',
+        		'attributes' => array(
+        			'value' => 'Send'
+        		)
         ));
     }
 }
