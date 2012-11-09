@@ -36,7 +36,6 @@ echo $this->form()->openTag($form);
     echo $this->formTextarea($form->get('body'));
     echo $this->formElementErrors($form->get('body'));
 ?></dd>
-<?php var_dump($form->get('country'));?>
 <dt><?php echo $this->formLabel($form->get('country')); ?></dt>
 <dd><?php 
     echo $this->formInput($form->get('country'));
