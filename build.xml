@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2012-2012 Andreas Heigl<andreas@heigl.org>
+ 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+This is the ant-buildfile
+
+@package   OrgHeiglContact
+@author    Andreas Heigl <andreas@heigl.org>
+@copyright (c) 2012-2012 Andreas Heigl <andreas@heigl.org>
+@license   http://www.opensource.org/license/MIT MIT
+@version   1.0
+@since     14.11.2012
+-->
+<project name="OrgHeiglContact" default="build" basedir=".">
+
+    <!--
+        First we need some more libraries
+    -->
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="lib/ant-contrib-0.6.jar"/>
+        </classpath>
+    </taskdef>
+    <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask">
+        <classpath>
+          <pathelement location="lib/xmltask.jar"/>
+        </classpath>
+    </taskdef>
+    <!-- Defining some properties -->
+    <!--
+        Then we need to define some time and date-values
+    -->
+    <tstamp>
+        <format property="date" pattern="yyyy-MM-dd" locale="de,DE"/>
+        <format property="year" pattern="yyyy" locale="de,DE"/>
+    </tstamp>
+    <tstamp>
+        <format property="time" pattern="hh:mm:ss" locale="de,DE"/>
+    </tstamp>
+        
+    <!-- The version property should be retrieved from the GIT-Tag! -->
+    <!--property name="version" value="1.0.0  "/-->
+        
+    <!-- Define some paths -->
+    <property name="dir.doc" value="${basedir}/doc"/>
+    <property name="dir.build" value="${basedir}/build"/>
+    <property name="dir.src" value="${basedir}/src"/>
+    <property name="dir.tests" value="${basedir}/tests"/>
+    <property name="dir.tools" value="${basedir}/tools"/>
+    <property name="dir.dist" value="${basedir}/dist"/>
+    <propertyregex property="dir.package" input="${package.name}" defaultvalue="${package.name}" regexp="\\" replace="/" global="true"/>
+    
+    <!-- This target deletes all temporary files from the directory -->
+    <target name="build"
+                 depends="test" />
+        
+    <target name="clean">
+        <delete includeemptydirs="true">
+            <fileset dir="${dir.build}">
+                <include name="**/*" />
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="test">
+        <mkdir dir="${dir.build}/logs"/>
+        <mkdir dir="${dir.build}/phpunit"/>
+        <mkdir dir="${dir.build}/phpunit/coverage"/>
+        <delete includeemptydirs="true" verbose="false">
+            <fileset dir="${dir.build}/phpunit/coverage">
+                <include name="**/*" />
+            </fileset>
+        </delete>
+        <exec executable="phpunit" dir="${basedir}" failonerror="false"/>
+        <exec executable="${dir.tools}/removeBasePath.sh" dir="${dir.build}/phpunit/coverage" failonerror="false">
+            <arg line="${dir.src}"/>
+        </exec>
+    </target>
+    
+    <target name="internal.api">
+        <mkdir dir="${dir.build}/api"/>
+        <exec executable="phpdoc" dir="${dir.src}" failonerror="on"/>
+    </target>
+    
+    <!--target name="distribute">
+        <buildnumber />
+        <property file="build.number" />
+        <mkdir dir="${dir.dist}"/>
+        <exec executable="${dir.tools}/createPackage" dir="${dir.src}" failonerror="true">
+            <arg value="make"/>
+        </exec>
+        <exec executable="pear" dir="${dir.src}">
+            <arg value="package"/>
+        </exec>
+        <move todir="${dir.dist}">
+            <fileset dir="${dir.src}">
+                <include name="**/*.tgz"/>
+            </fileset>
+        </move>
+        <delete file="${dir.tmp}/package.xml"/>
+        <zip destfile="${dir.dist}/${package.name}-Build_${build.number}.zip">
+            <zipfileset dir="${dir.build}/api" prefix="documentation/api" />
+            <zipfileset dir="${dir.build}/doc" prefix="documentation/manual" />
+            <zipfileset dir="${dir.build}/phpunit/coverage" prefix="documentation/coverage" />
+            <zipfileset dir="${dir.tmp}/Org/Heigl/Calendar" prefix="library/${dir.package}"/>
+            <fileset dir="${basedir}" includes="CHANGELOG" />
+            <fileset dir="${basedir}" includes="LICENSE" />
+            <fileset dir="${basedir}" includes="README" />
+        </zip>
+        <antcall target="clean"/>
+    </target-->
+
+    <!--target name="manual">
+        <mkdir dir="${dir.build}/doc"/>
+        <delete includeemptydirs="true" verbose="true">
+            <fileset dir="${dir.build}/doc">
+                <include name="**/*" />
+            </fileset>
+        </delete>
+        <exec executable="xsltproc" dir="${basedir}">
+            <arg line="-output ${dir.build}/doc/index.html ${dir.doc}/style.xsl ${dir.doc}/main.xml "/>
+        </exec>
+        <copy todir="${dir.build}/doc/">
+            <fileset dir="${dir.doc}/inc/"/>
+        </copy>
+    </target-->
+    
+    <!--
+    Check the code using phpcs using the heigl.org-Standard
+    -->
+    
+    <target name="sniff">
+        <exec executable="phpcs" dir="${dir.src}" failonerror="true">
+            <arg value="--standard=${sniff}"/>
+            <arg value="-n"/>
+            <arg value="-p"/>
+            <arg value="."/>
+        </exec>
+    </target>
+</project>
