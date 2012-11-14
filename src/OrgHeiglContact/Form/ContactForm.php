@@ -31,6 +31,13 @@
  */
 namespace OrgHeiglContact\Form;
 
+use Zend\Stdlib\Hydrator\ArraySerializable;
+
+use Zend\InputFilter\Input;
+
+use Zend\InputFilter\InputFilter;
+use Zend\Validator;
+
 use Zend\Form\Form;
 use Zend\Form\Element;
 use Zend\Validator\Hostname as HostnameValidator;
@@ -55,9 +62,11 @@ class ContactForm extends Form
      *
      * @return ContactForm
      */
-    public function init()
+    public function init()	
     {
         $this->setName('contact');
+        
+        $this->setHydrator(new ArraySerializable);
 
         $this->add(array(
         		'name' => 'from',
@@ -131,5 +140,35 @@ class ContactForm extends Form
         			'value' => 'Send'
         		)
         ));
+        
+        
+        $from = new Input('from');
+        $from->isRequired(true);
+        $from->setAllowEmpty(false);
+        $from->getValidatorChain()
+        	 ->addByName('EmailAddress');
+        $country = new Input('country');
+        $country->isRequired(true);
+        $country->setAllowEmpty(true);
+        $country->getValidatorChain()->addByName('Identical', array('token'=>''));
+        
+        $subject = new Input('subject');
+        $subject->isRequired(true);
+        $subject->setAllowEmpty(true);
+        
+        $body = new Input('body');
+        $body->isRequired(true);
+        $body->setAllowEmpty(false);
+        
+        $filter = new InputFilter();
+        $filter->add($from);
+        $filter->add($subject);
+        $filter->add($body);
+        $filter->add($country);
+        
+        $this->setInputFilter($filter);
+
+        
+        return $this;
     }
 }

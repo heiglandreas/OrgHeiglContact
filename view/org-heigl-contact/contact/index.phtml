@@ -36,8 +36,8 @@ echo $this->form()->openTag($form);
     echo $this->formTextarea($form->get('body'));
     echo $this->formElementErrors($form->get('body'));
 ?></dd>
-<dt><?php echo $this->formLabel($form->get('country')); ?></dt>
-<dd><?php 
+<dt class="zonkos"><?php echo $this->formLabel($form->get('country')); ?></dt>
+<dd class="zonkos"><?php 
     echo $this->formInput($form->get('country'));
     echo $this->formElementErrors($form->get('country'));
 ?></dd>

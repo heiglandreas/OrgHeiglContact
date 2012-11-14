@@ -144,12 +144,12 @@ class ContactController extends AbstractActionController
         $form = $this->form;
         $form->setData($post);
         if (!$form->isValid()) {
-            $model = new ViewModel(array(
+            $view = new ViewModel(array(
                         'error' => true,
                         'form'  => $form
             ));
-            $model->setTemplate('contact/index');
-            return $model;
+            $view->setTemplate('org-heigl-contact/contact/index');
+            return $view;
         }
 
         // send email...
