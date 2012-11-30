@@ -49,25 +49,7 @@ use Zend\ModuleManager\ModuleManager,
  */
 class Module
 {
-//     public function init(ModuleManager $moduleManager)
-//     {
-//         $events = StaticEventManager::getInstance();
-//         $events->attach('bootstrap', 'bootstrap', array($this, 'initializeView'), 100);
-//     }
-
-//     public function initializeView($e)
-//     {
-//     	$app          = $e->getParam('application');
-//     	$basePath     = $app->getRequest()->getBasePath();
-//     	$locator      = $app->getLocator();
-//     	$renderer     = $locator->get('Zend\View\Renderer\PhpRenderer');
-//     	$renderer->plugin('url')->setRouter($app->getRouter());
-//     	$renderer->doctype()->setDoctype('HTML5');
-//     	$renderer->plugin('basePath')->setBasePath($basePath);
-    
-//     }
-    
-    public function onBootstrap($e)
+        public function onBootstrap($e)
     {
     	$e->getApplication()->getServiceManager()->get('translator');
     	$eventManager        = $e->getApplication()->getEventManager();

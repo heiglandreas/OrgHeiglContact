@@ -1,12 +1,15 @@
 <?php
 
+namespace OrgHeiglContact\Form;
+
 use \PHPUnit_Framework_TestCase;
 use \OrgHeiglContact\Form\ContactForm;
 
 /**
  * ContactForm test case.
  */
-class ContactFormTest extends PHPUnit_Framework_TestCase {
+class ContactFormTest extends PHPUnit_Framework_TestCase 
+{
 	
 	/**
 	 *
@@ -23,6 +26,8 @@ class ContactFormTest extends PHPUnit_Framework_TestCase {
 		// TODO Auto-generated ContactFormTest::setUp()
 		
 		$this->ContactForm = new ContactForm(/* parameters */);
+		$this->ContactForm->init();
+		
 	}
 	
 	/**
@@ -36,23 +41,71 @@ class ContactFormTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * Constructs the test case.
-	 */
-	public function __construct() {
-		// TODO Auto-generated constructor
-	}
-	
-	/**
 	 * Test Validation of FormFields
 	 * 
 	 */
-	public function testFormValidation()
+	public function testForValidForm()
 	{
-		$this->assertInstanceof('OrgHeiglContact\Form\ContactForm', $this->ContactForm);
-		
-		$from = $this->ContactForm->get('from')->getValidatorChain()->getValidators();
-		
-		$this->assertEquals(array('Zend\Validator\EmailAddress'), $from);
+	    // 
+	}
+	
+	/**
+	 * test Validation of Form
+	 * 
+	 * @dataProvider provider
+	 * @return void
+	 */
+	public function testFormValidation($res, $val)
+	{
+	    $val['csrf'] = $this->ContactForm->get('csrf')->getValue();
+		$this->ContactForm->setData($val);
+		$this->assertEquals($res, $this->ContactForm->isValid());
+	}
+	
+	public function provider()
+	{
+		return array(
+		        array(true, array(
+					'from'=>'me@example.com',
+					'subject' => 'my subject',
+					'body' => 'My Message',
+					'country' => '',
+				)),
+			    array(false, array(
+					'from'=>'foo',
+					'subject' => 'my subject',
+					'body' => 'My Message',
+					'country' => '',
+				)),	
+			array(false, array(
+					'from'=>'me@example.com',
+					'subject' => '',
+					'body' => 'My Message',
+					'country' => '',
+				)),	
+			array(false, array(
+					'from'=>'me@example.com',
+					'subject' => 'my subject',
+					'body' => '',
+					'country' => '',
+				)),	
+			array(false, array(
+					'from'=>'me@example.com',
+					'subject' => 'my subject',
+					'body' => 'My message',
+					'country' => 'foo',
+				)),	
+			array(false, array(
+					'subject' => 'my subject',
+					'body' => 'My message',
+					'country' => 'foo',
+				)),	
+			array(false, array(
+					'from'=>'me@example.com',
+					'subject' => 'my subject',
+					'body' => 'My message',
+				)),	
+		);//*/
 	}
 }
 

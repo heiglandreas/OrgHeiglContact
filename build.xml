@@ -58,6 +58,10 @@ This is the ant-buildfile
         
     <!-- The version property should be retrieved from the GIT-Tag! -->
     <!--property name="version" value="1.0.0  "/-->
+	
+	<property file="build.properties.dist"/>
+	<property file="build.properties"/>
+	    
         
     <!-- Define some paths -->
     <property name="dir.doc" value="${basedir}/doc"/>

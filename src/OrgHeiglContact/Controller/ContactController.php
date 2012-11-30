@@ -72,12 +72,17 @@ class ContactController extends AbstractActionController
      * @var Transport $transport
      */
     protected $transport = null;
-    
+
+    /**
+     * Create the Controller-Instance
+     * 
+     * @param ContactForm $form
+     */
     public function __construct(ContactForm $form = null)
     {
-    	if ( null !== $form ) {
-    		$this->setContactForm($form);
-    	}
+        if (null !== $form) {
+             $this->setContactForm($form);
+        }
     }
 
     /**

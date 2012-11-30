@@ -120,15 +120,10 @@ class ContactForm extends Form
         		'name' => 'country',
         		'type' => 'Zend\Form\Element\Text',
         		'options' => array(
-	                'required'       => false,
 	                'value'          => '',
-	                'ignore'         => true,
 	                'class'          => 'zonkos',
 	                'label'          => 'SPAM-Protection: Please leave this field as it is!',
-	                'validators' => array(
-	                	new \Zend\Validator\Identical(''),
-	                ),
-        		),
+	            ),                
         ));
 
         $this->add(new Element\Csrf('csrf'));
@@ -147,14 +142,16 @@ class ContactForm extends Form
         $from->setAllowEmpty(false);
         $from->getValidatorChain()
         	 ->addByName('EmailAddress');
+        
         $country = new Input('country');
         $country->isRequired(true);
         $country->setAllowEmpty(true);
-        $country->getValidatorChain()->addByName('Identical', array('token'=>''));
+        $country->getValidatorChain()
+                ->addByName('Identical', array('token'=>''));
         
         $subject = new Input('subject');
         $subject->isRequired(true);
-        $subject->setAllowEmpty(true);
+        $subject->setAllowEmpty(false);
         
         $body = new Input('body');
         $body->isRequired(true);
