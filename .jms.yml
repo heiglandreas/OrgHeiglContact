@@ -1,3 +1,5 @@
+excluded_paths: [vendor/*]
+
 default_config:       
     parameter_reference_check:  
         enabled:              true 
