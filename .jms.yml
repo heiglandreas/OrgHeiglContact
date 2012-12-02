@@ -1,4 +1,5 @@
-excluded_paths: [vendor/*]
+filter:
+    excluded_paths: [vendor/*]
 
 default_config:       
     parameter_reference_check:  
