@@ -1,5 +1,5 @@
 {
-    "name" : "orgheigl/contact",
+    "name" : "org_heigl/contact",
     "type" : "library",
     "description": "Contact-Form using a honeypot for spam-protection",
     "keywords": ["contact","form","Honeypot","spam"],
