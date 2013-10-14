@@ -8,7 +8,7 @@ return array(
 			'message'   => 'OrgHeiglContact\Service\MailMessageFactory',
 			'transport' => 'OrgHeiglContact\Service\MailTransportFactory',
 		),
-		'instances' => array(
+		'invokables' => array(
 			'OrgHeiglContact\Form\ContactForm' => 'OrgHeiglContact\Form\ContactForm',
 		),
 	),
