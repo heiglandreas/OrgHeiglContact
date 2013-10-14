@@ -2,9 +2,16 @@
 #
 language: php
 php:
+  - "5.5"
   - "5.4"
   - "5.3"
        
-script: phpunit --coverage-clover "clover"
-before_script: composer install
-after_success: curl -sL https://bit.ly/artifact-uploader | php
+script:
+  - phpunit --coverage-text
+
+before_script:
+  - php composer.phar self-update
+  - php composer.phar install
+
+after_success:
+  - curl -sL https://bit.ly/artifact-uploader | php
