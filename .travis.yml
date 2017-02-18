@@ -24,16 +24,16 @@ matrix:
     - php: 7.1
       env:
         - DEPS=latest
-    - php: latest
+    - php: nightly
       env:
         - DEPS=lowest
-    - php: latest
+    - php: nightly
       env:
         - DEPS=locked
-    - php: latest
+    - php: nightly
       env:
         - DEPS=latest
-        - php: hhvm
+    - php: hhvm
       env:
         - DEPS=lowest
     - php: hhvm
