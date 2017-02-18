@@ -33,6 +33,7 @@
 namespace Org_Heigl\Contact;
 
 use Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\MvcEvent;
 
 /**
  * The Module-Provider
@@ -48,11 +49,11 @@ use Zend\Mvc\ModuleRouteListener;
  */
 class Module
 {
-    public function onBootstrap($e)
+    public function onBootstrap(MvcEvent $event)
     {
-    	$eventManager        = $e->getApplication()->getEventManager();
-    	$moduleRouteListener = new ModuleRouteListener();
-    	$moduleRouteListener->attach($eventManager);
+        $eventManager        = $event->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
     }
     
     public function getConfig()
