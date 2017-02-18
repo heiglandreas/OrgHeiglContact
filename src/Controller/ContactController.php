@@ -154,7 +154,7 @@ class ContactController extends AbstractActionController
                         'error' => true,
                         'form'  => $form
             ));
-            $view->setTemplate('org-heigl-contact/contact/index');
+            $view->setTemplate('org_heigl/contact/contact/index');
             return $view;
         }
 
