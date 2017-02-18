@@ -1,22 +1,28 @@
 <?php
 
-namespace OrgHeiglContact;
+namespace Org_Heigl\Contact;
 
-return array(
-	'service_manager' => array(
-		'factories' => array(
-			'message'   => 'OrgHeiglContact\Service\MailMessageFactory',
-			'transport' => 'OrgHeiglContact\Service\MailTransportFactory',
-		),
-		'invokables' => array(
-			'OrgHeiglContact\Form\ContactForm' => 'OrgHeiglContact\Form\ContactForm',
-		),
-	),
-	'controllers' => array(
-		'factories' => array(
-			'OrgHeiglContact\Controller\ContactController' => 'OrgHeiglContact\Service\ContactControllerFactory'
-		),
-	),
+use Org_Heigl\Contact\Controller\ContactController;
+use Org_Heigl\Contact\Form\ContactForm;
+use Org_Heigl\Contact\Service\ContactControllerFactory;
+use Org_Heigl\Contact\Service\MailMessageFactory;
+use Org_Heigl\Contact\Service\MailTransportFactory;
+
+return [
+	'service_manager' => [
+		'factories' => [
+			'message'   => MailMessageFactory::class,
+			'transport' => MailTransportFactory::class,
+		],
+		'invokables' => [
+			ContactForm::class => ContactForm::class,
+		],
+	],
+	'controllers' => [
+		'factories' => [
+			ContactController::class => ContactControllerFactory::class,
+		],
+	],
 	'view_manager' => array(
 			'display_not_found_reason' => true,
 			'display_exceptions'       => true,
@@ -28,39 +34,39 @@ return array(
 					__DIR__ . '/../view',
 			),
 	),	
-	'router' => array(
-        'routes' => array(
-            'contact' => array(
+	'router' => [
+        'routes' => [
+            'contact' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route' => '/contact',
-                    'defaults' => array(
-                        'controller' => 'OrgHeiglContact\Controller\ContactController',
+                    'defaults' => [
+                        'controller' => ContactController::class,
                         'action'     => 'index',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'process' => array(
+                'child_routes' => [
+                    'process' => [
                         'type' => 'Literal',
-                        'options' => array(
+                        'options' => [
                             'route' => '/process',
-                            'defaults' => array(
+                            'defaults' => [
                                 'action'     => 'process',
-                            ),
-                        ),
-                    ),
-                    'thank-you' => array(
+                            ],
+                        ],
+                    ],
+                    'thank-you' => [
                         'type' => 'Literal',
-                        'options' => array(
+                        'options' => [
                             'route' => '/thank-you',
-                            'defaults' => array(
+                            'defaults' => [
                                 'action'     => 'thank-you',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    )
-);
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ]
+];

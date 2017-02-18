@@ -33,6 +33,7 @@ namespace Org_Heigl\Contact\Service;
 
 use Interop\Container\ContainerInterface;
 use Org_Heigl\Contact\Controller\ContactController;
+use Org_Heigl\Contact\Form\ContactForm;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
 
@@ -60,7 +61,7 @@ class ContactControllerFactory implements FactoryInterface
 	 */
  	public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
  	{
-	 	$form      = $container->get('OrgHeiglContact\Form\ContactForm');
+	 	$form      = $container->get(ContactForm::class);
  		$message   = $container->get('message');
  		$transport = $container->get('transport');
  		
