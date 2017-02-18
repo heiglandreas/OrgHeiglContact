@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
+ * @category  ContactForm
  * @package   HeiglContact
  * @author    Andreas Heigl<andreas@heigl.org>
  * @copyright 2011-2012 Andreas Heigl
@@ -28,49 +29,46 @@
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/php.ug
  */
-namespace OrgHeiglContact\Service;
 
-use OrgHeiglContact\Controller\ContactController;
-use OrgHeiglContact\Form\ContactForm;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+namespace Org_Heigl\Contact;
 
+use Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\MvcEvent;
 
 /**
- * The Contact-Controller Factory
+ * The Module-Provider
  *
- * @category  ContactForm
- * @package   OrgHeiglContact
+ * @category  php.ug
+ * @package   Phpug
  * @author    Andreas Heigl<andreas@heigl.org>
- * @copyright 2011-2012 Andreas Heigl
+ * @copyright 2011-2012 php.ug
  * @license   http://www.opensource.org/licenses/mit-license.php MIT-License
  * @version   0.0
  * @since     06.03.2012
- * @link      http://github.com/heiglandreas/OrgHeiglContact
+ * @link      http://github.com/heiglandreas/php.ug
  */
-class ContactControllerFactory implements FactoryInterface
+class Module
 {
-	/**
-	 * Create the ContactController
-	 * 
-	 * @param ServiceLocator $services The ServiceLocator
-	 * 
-	 * @see \Zend\ServiceManager\FactoryInterface::createService()
-	 * @return ContactController
-	 */
- 	public function createService(ServiceLocatorInterface $services)
- 	{
- 		$serviceLocator = $services->getServiceLocator();
- 		
-	 	$form      = $serviceLocator->get('OrgHeiglContact\Form\ContactForm');
- 		$message   = $serviceLocator->get('message');
- 		$transport = $serviceLocator->get('transport');
- 		
- 		$controller = new ContactController();
- 		$controller->setContactForm($form);
- 		$controller->setMessage($message);
- 		$controller->setTransport($transport);
- 		
- 		return $controller;
- 	}
+    public function onBootstrap(MvcEvent $event)
+    {
+        $eventManager        = $event->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
+    }
+    
+    public function getConfig()
+    {
+    	return include __DIR__ . '/config/module.config.php';
+    }
+    
+    public function getAutoloaderConfig()
+    {
+    	return array(
+    			'Zend\Loader\StandardAutoloader' => array(
+    					'namespaces' => array(
+    							__NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+    					),
+    			),
+    	);
+    }
 }

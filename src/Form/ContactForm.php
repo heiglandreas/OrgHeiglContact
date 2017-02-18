@@ -29,19 +29,18 @@
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/php.ug
  */
-namespace OrgHeiglContact\Form;
 
-use Zend\Stdlib\Hydrator\ArraySerializable;
+namespace Org_Heigl\Contact\Form;
 
-use Zend\InputFilter\Input;
-
-use Zend\InputFilter\InputFilter;
-use Zend\Validator;
-
-use Zend\Form\Form;
 use Zend\Form\Element;
+use Zend\Form\Form;
+use Zend\Hydrator\ArraySerializable;
+use Zend\InputFilter\Input;
+use Zend\InputFilter\InputFilter;
+use Zend\Validator\EmailAddress;
 use Zend\Validator\Hostname as HostnameValidator;
-use OrgHeiglContact\Validator\IsEmpty as EmptyValidator;
+use Zend\Validator\Identical;
+use Zend\Validator\NotEmpty;
 
 /**
  * The Contact-Form
@@ -120,9 +119,9 @@ class ContactForm extends Form
         		'name' => 'country',
         		'type' => 'Zend\Form\Element\Text',
         		'options' => array(
-	                'value'          => '',
-	                'class'          => 'zonkos',
-	                'label'          => 'SPAM-Protection: Please leave this field as it is!',
+	                'value' => '',
+	                'class' => 'zonkos',
+	                'label' => 'SPAM-Protection: Please leave this field as it is!',
 	            ),                
         ));
 
@@ -138,24 +137,29 @@ class ContactForm extends Form
         
         
         $from = new Input('from');
-        $from->isRequired(true);
-        $from->setAllowEmpty(false);
+        $from->setRequired(true);
         $from->getValidatorChain()
-        	 ->addByName('EmailAddress');
-        
+            ->attach(new NotEmpty())
+            ->attach(new EmailAddress())
+        ;
+
         $country = new Input('country');
-        $country->isRequired(true);
         $country->setAllowEmpty(true);
         $country->getValidatorChain()
-                ->addByName('Identical', array('token'=>''));
-        
+            ->attach(new Identical(''))
+        ;
+
         $subject = new Input('subject');
-        $subject->isRequired(true);
-        $subject->setAllowEmpty(false);
+        $subject->setRequired(true);
+        $subject->getValidatorChain()
+            ->attach(new NotEmpty())
+        ;
         
         $body = new Input('body');
-        $body->isRequired(true);
-        $body->setAllowEmpty(false);
+        $body->setRequired(true);
+        $body->getValidatorChain()
+            ->attach(new NotEmpty())
+        ;
         
         $filter = new InputFilter();
         $filter->add($from);

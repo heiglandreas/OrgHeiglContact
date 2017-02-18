@@ -20,7 +20,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @category  ContactForm
  * @package   HeiglContact
  * @author    Andreas Heigl<andreas@heigl.org>
  * @copyright 2011-2012 Andreas Heigl
@@ -30,46 +29,46 @@
  * @link      http://github.com/heiglandreas/php.ug
  */
 
-namespace OrgHeiglContact;
+namespace Org_Heigl\Contact\Service;
 
-use Zend\ModuleManager\ModuleManager,
-    Zend\EventManager\StaticEventManager,
-	Zend\Mvc\ModuleRouteListener;
+use Interop\Container\ContainerInterface;
+use Org_Heigl\Contact\Controller\ContactController;
+use Zend\ServiceManager\Factory\FactoryInterface;
+
+
 /**
- * The Module-Provider
+ * The Contact-Controller Factory
  *
- * @category  php.ug
- * @package   Phpug
+ * @category  ContactForm
+ * @package   OrgHeiglContact
  * @author    Andreas Heigl<andreas@heigl.org>
- * @copyright 2011-2012 php.ug
+ * @copyright 2011-2012 Andreas Heigl
  * @license   http://www.opensource.org/licenses/mit-license.php MIT-License
  * @version   0.0
  * @since     06.03.2012
- * @link      http://github.com/heiglandreas/php.ug
+ * @link      http://github.com/heiglandreas/OrgHeiglContact
  */
-class Module
+class ContactControllerFactory implements FactoryInterface
 {
-        public function onBootstrap($e)
-    {
-    	$e->getApplication()->getServiceManager()->get('translator');
-    	$eventManager        = $e->getApplication()->getEventManager();
-    	$moduleRouteListener = new ModuleRouteListener();
-    	$moduleRouteListener->attach($eventManager);
-    }
-    
-    public function getConfig()
-    {
-    	return include __DIR__ . '/config/module.config.php';
-    }
-    
-    public function getAutoloaderConfig()
-    {
-    	return array(
-    			'Zend\Loader\StandardAutoloader' => array(
-    					'namespaces' => array(
-    							__NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-    					),
-    			),
-    	);
-    }
+	/**
+	 * Create the ContactController
+	 * 
+	 * @param ServiceLocator $services The ServiceLocator
+	 * 
+	 * @see \Zend\ServiceManager\FactoryInterface::createService()
+	 * @return ContactController
+	 */
+ 	public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+ 	{
+	 	$form      = $container->get('OrgHeiglContact\Form\ContactForm');
+ 		$message   = $container->get('message');
+ 		$transport = $container->get('transport');
+ 		
+ 		$controller = new ContactController();
+ 		$controller->setContactForm($form);
+ 		$controller->setMessage($message);
+ 		$controller->setTransport($transport);
+ 		
+ 		return $controller;
+ 	}
 }

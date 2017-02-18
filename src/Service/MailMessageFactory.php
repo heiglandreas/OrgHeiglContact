@@ -28,19 +28,20 @@
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/php.ug
  */
-namespace OrgHeiglContact\Service;
 
+namespace Org_Heigl\Contact\Service;
+
+use Interop\Container\ContainerInterface;
 use Traversable;
 use Zend\Mail\Message;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\Stdlib\ArrayUtils;
 
 class MailMessageFactory implements FactoryInterface
 {
-	public function createService(ServiceLocatorInterface $services)
+	public function createService(ContainerInterface $container, $requestedName, array $options = null)
 	{
-		$config  = $services->get('config');
+		$config  = $container->get('config');
 		if ($config instanceof Traversable) {
 			$config = ArrayUtils::iteratorToArray($config);
 		}

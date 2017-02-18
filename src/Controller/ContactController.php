@@ -29,12 +29,13 @@
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/php.ug
  */
-namespace OrgHeiglContact\Controller;
+
+namespace Org_Heigl\Contact\Controller;
 
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mail\Transport\TransportInterface;
-use OrgHeiglContact\Form\ContactForm;
+use Org_Heigl\Contact\Form\ContactForm;
 use Zend\Mail\Message as Message;
 use Zend\View\Model\ViewModel;
 

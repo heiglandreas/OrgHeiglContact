@@ -1,14 +1,14 @@
 <?php
 
-namespace OrgHeiglContact\Form;
+namespace Org_Heigl\ContactTest\Form;
 
-use \PHPUnit_Framework_TestCase;
-use \OrgHeiglContact\Form\ContactForm;
+use PHPUnit\Framework\TestCase;
+use Org_Heigl\Contact\Form\ContactForm;
 
 /**
  * ContactForm test case.
  */
-class ContactFormTest extends PHPUnit_Framework_TestCase 
+class ContactFormTest extends TestCase
 {
 	
 	/**
@@ -41,30 +41,18 @@ class ContactFormTest extends PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * Test Validation of FormFields
-	 * 
-	 */
-	public function testForValidForm()
-	{
-	    // 
-	}
-	
-	/**
 	 * test Validation of Form
 	 * 
 	 * @dataProvider provider
 	 * @return void
 	 */
-	public function testFormValidation($res, $val)
-	{
-        if (! isset($val['country'])) {
-            $this->markTestSkipped('Skips validation of required but non-existend values due to wrong implementation in \Zend\InputFIlter\BaseInputFilter since rev. 2.1.5');
-        }
+    public function testFormValidation($res, $val)
+    {
 	    $val['csrf'] = $this->ContactForm->get('csrf')->getValue();
-		$this->ContactForm->setData($val);
-		$this->assertEquals($res, $this->ContactForm->isValid());
-	}
-	
+        $this->ContactForm->setData($val);
+        $this->assertEquals($res, $this->ContactForm->isValid());
+    }
+
 	public function provider()
 	{
 		return array(

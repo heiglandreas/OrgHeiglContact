@@ -28,18 +28,18 @@
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/php.ug
  */
-namespace OrgHeiglContact\Service;
 
+namespace Org_Heigl\Contact\Service;
+
+use Interop\Container\ContainerInterface;
 use Traversable;
 use Zend\Mail\Transport;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\Stdlib\ArrayUtils;
+
 /**
  * The Contact-Controller Factory
  *
- * @category  ContactForm
- * @package   OrgHeiglContact\Service
  * @author    Andreas Heigl<andreas@heigl.org>
  * @copyright 2011-2012 Andreas Heigl
  * @license   http://www.opensource.org/licenses/mit-license.php MIT-License
@@ -49,9 +49,9 @@ use Zend\Stdlib\ArrayUtils;
  */
 class MailTransportFactory implements FactoryInterface
 {
-    public function createService(ServiceLocatorInterface $services)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config  = $services->get('config');
+        $config  = $container->get('config');
         if ($config instanceof Traversable) {
             $config = ArrayUtils::iteratorToArray($config);
         }

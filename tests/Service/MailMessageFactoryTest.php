@@ -1,16 +1,14 @@
 <?php
 
-namespace OrgHeiglContact\Service;
+namespace Org_Heigl\ContactTest\Service;
 
-use Zend\Di\ServiceLocator;
-
-use \Zend\Mail\Message;
-use \PHPUnit_Framework_TestCase;
+use Zend\Mail\Message;
+use PHPUnit\Framework\TestCase;
 
 /**
  * test case.
  */
-class MailMessageFactoryTest extends PHPUnit_Framework_TestCase
+class MailMessageFactoryTest extends TestCase
 {
     
     /**
