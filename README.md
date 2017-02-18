@@ -1,7 +1,16 @@
 # Org_Heigl\Contact
 
 [![Build-Status](https://secure.travis-ci.org/heiglandreas/OrgHeiglContact.png?branch=master)](https://travis-ci.org/heiglandreas/OrgHeiglContact)
+[![Coverage Status](https://coveralls.io/repos/github/heiglandreas/OrgHeiglContact/badge.svg?branch=master)](https://coveralls.io/github/heiglandreas/OrgHeiglContact?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/heiglandreas/OrgHeiglContact/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/heiglandreas/OrgHeiglContact/?branch=master)
+[![Code Climate](https://lima.codeclimate.com/github/heiglandreas/OrgHeiglContact/badges/gpa.svg)](https://lima.codeclimate.com/github/heiglandreas/OrgHeiglContact)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8f17c61b46264450bd283649c8e4341e)](https://www.codacy.com/app/github_70/OrgHeiglContact?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=heiglandreas/OrgHeiglContact&amp;utm_campaign=Badge_Grade)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/a9935726-d41a-400c-ba0b-0e9feb2a4fb7/mini.png)](https://insight.sensiolabs.com/projects/a9935726-d41a-400c-ba0b-0e9feb2a4fb7)
+
+[![Latest Stable Version](https://poser.pugx.org/org_heigl/contact/v/stable)](https://packagist.org/packages/org_heigl/contact)
+[![Total Downloads](https://poser.pugx.org/org_heigl/contact/downloads)](https://packagist.org/packages/org_heigl/contact)
+[![License](https://poser.pugx.org/org_heigl/contact/license)](https://packagist.org/packages/org_heigl/contact)
+[![composer.lock](https://poser.pugx.org/org_heigl/contact/composerlock)](https://packagist.org/packages/org_heigl/contact)
 
 This Modules provides a simple contact-form with spam-protection using a
 honeypot. It is based on the [PhlyContact-Module](https://github.com/phly/PhlyContact) by Matthew WeierOPhinney.
