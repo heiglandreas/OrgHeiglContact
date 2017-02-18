@@ -28,19 +28,18 @@
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/php.ug
  */
-namespace OrgHeiglContact\Service;
 
-use OrgHeiglContact\Controller\ContactController;
-use OrgHeiglContact\Form\ContactForm;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+namespace Org_Heigl\Contact\Service;
 
+use Interop\Container\ContainerInterface;
+use Traversable;
+use Zend\Mail\Transport;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * The Contact-Controller Factory
  *
- * @category  ContactForm
- * @package   OrgHeiglContact
  * @author    Andreas Heigl<andreas@heigl.org>
  * @copyright 2011-2012 Andreas Heigl
  * @license   http://www.opensource.org/licenses/mit-license.php MIT-License
@@ -48,29 +47,43 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/OrgHeiglContact
  */
-class ContactControllerFactory implements FactoryInterface
+class MailTransportFactory implements FactoryInterface
 {
-	/**
-	 * Create the ContactController
-	 * 
-	 * @param ServiceLocator $services The ServiceLocator
-	 * 
-	 * @see \Zend\ServiceManager\FactoryInterface::createService()
-	 * @return ContactController
-	 */
- 	public function createService(ServiceLocatorInterface $services)
- 	{
- 		$serviceLocator = $services->getServiceLocator();
- 		
-	 	$form      = $serviceLocator->get('OrgHeiglContact\Form\ContactForm');
- 		$message   = $serviceLocator->get('message');
- 		$transport = $serviceLocator->get('transport');
- 		
- 		$controller = new ContactController();
- 		$controller->setContactForm($form);
- 		$controller->setMessage($message);
- 		$controller->setTransport($transport);
- 		
- 		return $controller;
- 	}
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config  = $container->get('config');
+        if ($config instanceof Traversable) {
+            $config = ArrayUtils::iteratorToArray($config);
+        }
+        $config  = $config['OrgHeiglContact']['mail_transport'];
+        $class   = $config['class'];
+        $options = $config['options'];
+
+        switch ($class) {
+            case 'Zend\Mail\Transport\Sendmail':
+            case 'Sendmail':
+            case 'sendmail';
+                $transport = new Transport\Sendmail();
+                break;
+            case 'Zend\Mail\Transport\Smtp';
+            case 'Smtp';
+            case 'smtp';
+                $options = new Transport\SmtpOptions($options);
+                $transport = new Transport\Smtp($options);
+                break;
+            case 'Zend\Mail\Transport\File';
+            case 'File';
+            case 'file';
+                $options = new Transport\FileOptions($options);
+                $transport = new Transport\File($options);
+                break;
+            default:
+                throw new \DomainException(sprintf(
+                    'Unknown mail transport type provided ("%s")',
+                    $class
+                ));
+        }
+
+        return $transport;
+    }
 }

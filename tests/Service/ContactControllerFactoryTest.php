@@ -1,17 +1,15 @@
 <?php
 
-namespace OrgHeiglContact\Service;
+namespace Org_Heigl\ContactTest\Service;
 
-use Zend\Di\ServiceLocator;
-
-use OrgHeiglContact\Service\ContactControllerFactory;
+use Org_Heigl\Contact\Service\ContactControllerFactory;
 use Zend\ServiceManager\ServiceManager;
-use \PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * test case.
  */
-class ContactControllerFactoryTest extends PHPUnit_Framework_TestCase
+class ContactControllerFactoryTest extends TestCase
 {
     
     /**

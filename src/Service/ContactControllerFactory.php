@@ -28,40 +28,47 @@
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/php.ug
  */
-namespace OrgHeiglContact\Service;
 
-use Traversable;
-use Zend\Mail\Message;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\ArrayUtils;
+namespace Org_Heigl\Contact\Service;
 
-class MailMessageFactory implements FactoryInterface
+use Interop\Container\ContainerInterface;
+use Org_Heigl\Contact\Controller\ContactController;
+use Zend\ServiceManager\Factory\FactoryInterface;
+
+
+/**
+ * The Contact-Controller Factory
+ *
+ * @category  ContactForm
+ * @package   OrgHeiglContact
+ * @author    Andreas Heigl<andreas@heigl.org>
+ * @copyright 2011-2012 Andreas Heigl
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT-License
+ * @version   0.0
+ * @since     06.03.2012
+ * @link      http://github.com/heiglandreas/OrgHeiglContact
+ */
+class ContactControllerFactory implements FactoryInterface
 {
-	public function createService(ServiceLocatorInterface $services)
-	{
-		$config  = $services->get('config');
-		if ($config instanceof Traversable) {
-			$config = ArrayUtils::iteratorToArray($config);
-		}
-		$config  = $config['OrgHeiglContact']['message'];
-
-		$message = new Message();
-
-		if (isset($config['to'])) {
-			$message->addTo($config['to']);
-		}
-
-		if (isset($config['from'])) {
-			$message->addFrom($config['from']);
-		}
-
-		if (isset($config['sender']) && isset($config['sender']['address'])) {
-			$address = $config['sender']['address'];
-			$name    = isset($config['sender']['name']) ? $config['sender']['name'] : null;
-			$message->setSender($address, $name);
-		}
-
-		return $message;
-	}
+	/**
+	 * Create the ContactController
+	 * 
+	 * @param ServiceLocator $services The ServiceLocator
+	 * 
+	 * @see \Zend\ServiceManager\FactoryInterface::createService()
+	 * @return ContactController
+	 */
+ 	public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+ 	{
+	 	$form      = $container->get('OrgHeiglContact\Form\ContactForm');
+ 		$message   = $container->get('message');
+ 		$transport = $container->get('transport');
+ 		
+ 		$controller = new ContactController();
+ 		$controller->setContactForm($form);
+ 		$controller->setMessage($message);
+ 		$controller->setTransport($transport);
+ 		
+ 		return $controller;
+ 	}
 }

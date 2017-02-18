@@ -29,19 +29,17 @@
  * @since     06.03.2012
  * @link      http://github.com/heiglandreas/php.ug
  */
-namespace OrgHeiglContact\Form;
 
-use Zend\Stdlib\Hydrator\ArraySerializable;
+namespace Org_Heigl\Contact\Form;
 
+use Zend\Hydrator\ArraySerializable;
 use Zend\InputFilter\Input;
-
 use Zend\InputFilter\InputFilter;
 use Zend\Validator;
-
 use Zend\Form\Form;
 use Zend\Form\Element;
 use Zend\Validator\Hostname as HostnameValidator;
-use OrgHeiglContact\Validator\IsEmpty as EmptyValidator;
+use Org_Heigl\Contact\Validator\IsEmpty as EmptyValidator;
 
 /**
  * The Contact-Form

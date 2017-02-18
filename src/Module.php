@@ -30,11 +30,10 @@
  * @link      http://github.com/heiglandreas/php.ug
  */
 
-namespace OrgHeiglContact;
+namespace Org_Heigl\Contact;
 
-use Zend\ModuleManager\ModuleManager,
-    Zend\EventManager\StaticEventManager,
-	Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\ModuleRouteListener;
+
 /**
  * The Module-Provider
  *
@@ -49,9 +48,8 @@ use Zend\ModuleManager\ModuleManager,
  */
 class Module
 {
-        public function onBootstrap($e)
+    public function onBootstrap($e)
     {
-    	$e->getApplication()->getServiceManager()->get('translator');
     	$eventManager        = $e->getApplication()->getEventManager();
     	$moduleRouteListener = new ModuleRouteListener();
     	$moduleRouteListener->attach($eventManager);

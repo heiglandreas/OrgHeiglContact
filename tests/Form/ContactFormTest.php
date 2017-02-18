@@ -1,14 +1,14 @@
 <?php
 
-namespace OrgHeiglContact\Form;
+namespace Org_Heigl\ContactTest\Form;
 
-use \PHPUnit_Framework_TestCase;
-use \OrgHeiglContact\Form\ContactForm;
+use PHPUnit\Framework\TestCase;
+use Org_Heigl\Contact\Form\ContactForm;
 
 /**
  * ContactForm test case.
  */
-class ContactFormTest extends PHPUnit_Framework_TestCase 
+class ContactFormTest extends TestCase
 {
 	
 	/**
